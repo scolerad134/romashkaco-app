@@ -1,18 +1,21 @@
 package com.romashkaco.service.impl;
 
 import com.romashkaco.model.Product;
+import com.romashkaco.repository.ProductRepository;
 import com.romashkaco.service.ProductService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class ProductServiceImpl implements ProductService {
-    private static final Map<Long, Product> products = new HashMap<>();
-    private long currentId = 1;
+
+    private final ProductRepository productRepository;
 
     /**
      * Получает список товаров.
@@ -21,7 +24,10 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> getAllProducts() {
-        return new ArrayList<>(products.values());
+        log.debug("getAllProducts - start");
+        List<Product> products = productRepository.findAll();
+        log.debug("getAllProducts - end, products = {}", products);
+        return products;
     }
 
     /**
@@ -31,7 +37,10 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product getProductById(Long id) {
-        return products.get(id);
+        log.debug("getProductById - start, id = {}", id);
+        Product product = productRepository.findById(id).orElse(null);
+        log.debug("getProductById - end, id = {}", id);
+        return product;
     }
 
     /**
@@ -41,8 +50,9 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product createProduct(Product product) {
-        product.setId(currentId++);
-        products.put(product.getId(), product);
+        log.debug("createProduct - start, product = {}", product);
+        productRepository.save(product);
+        log.debug("createProduct - end, product = {}", product);
         return product;
     }
 
@@ -53,11 +63,20 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product updateProduct(Long id, Product product) {
-        if (products.containsKey(id)) {
+
+        log.debug("updateProduct - start, id = {}, product = {}", id, product);
+
+        if (productRepository.findById(id).isPresent()) {
             product.setId(id);
-            products.put(id, product);
+            productRepository.save(product);
+
+            log.debug("updateProduct - end, id = {}, product = {}", id, product);
+
             return product;
         }
+
+        log.debug("updateProduct - end, id = {}, product = {}", id, product);
+
         return null;
     }
 
@@ -67,6 +86,19 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Boolean deleteProduct(Long id) {
-        return products.remove(id) != null;
+
+        log.debug("deleteProduct - start, id = {}", id);
+
+        Optional<Product> product = productRepository.findById(id);
+
+        if (product.isPresent()) {
+            productRepository.deleteById(id);
+            log.debug("deleteProduct - end, id = {}", id);
+            return true;
+        }
+
+        log.debug("deleteProduct - end, id = {}", id);
+
+        return false;
     }
 }

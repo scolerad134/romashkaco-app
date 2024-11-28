@@ -1,7 +1,7 @@
 package com.romashkaco.controller;
 
 import com.romashkaco.model.Product;
-import com.romashkaco.service.impl.ProductServiceImpl;
+import com.romashkaco.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ import java.util.List;
 @RequestMapping("/api/v1/products")
 public class ProductController {
 
-    private final ProductServiceImpl productService;
+    private final ProductService productService;
 
     /**
      * Получает список товаров.
