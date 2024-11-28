@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: romashkaco-app
+server:
+  port: 8080
