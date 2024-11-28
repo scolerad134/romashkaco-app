@@ -51,9 +51,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product createProduct(Product product) {
         log.debug("createProduct - start, product = {}", product);
-        productRepository.save(product);
+        Product saveProduct = productRepository.save(product);
         log.debug("createProduct - end, product = {}", product);
-        return product;
+        return saveProduct;
     }
 
     /**
