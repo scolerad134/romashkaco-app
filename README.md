@@ -69,3 +69,4 @@
    ```bash
    git clone https://github.com/scolerad134/romashkaco-app/tree/main
    cd romashkaco-app
+   ./start.sh
