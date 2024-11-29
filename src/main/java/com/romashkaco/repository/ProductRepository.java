@@ -10,6 +10,5 @@ import java.util.Optional;
 /**
  * Репозиторий для работы с Product.
  */
-
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 }

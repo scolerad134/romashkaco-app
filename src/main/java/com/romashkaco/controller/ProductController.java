@@ -91,7 +91,7 @@ public class ProductController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        log.debug("DELETE-request, updateProduct - start, id = {}", id);
+        log.debug("DELETE-request, deleteProduct - start, id = {}", id);
         return productService.deleteProduct(id) ? ResponseEntity.noContent().build()
             : ResponseEntity.notFound().build();
     }
