@@ -1,5 +1,6 @@
 package com.romashkaco.controller;
 
+import com.romashkaco.dto.ProductFilterDto;
 import com.romashkaco.model.Product;
 import com.romashkaco.service.impl.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,15 +38,65 @@ class ProductControllerTest {
     }
 
     @Test
-    void testGetAllProducts() {
-        List<Product> products = Arrays.asList(product);
-        when(productService.getAllProducts()).thenReturn(products);
+    void testGetAllProducts_NoFilter() {
+        List<Product> products = List.of(
+            new Product(1L, "Product 1", "Description 1", 100.0, true),
+            new Product(2L, "Product 2", "Description 2", 200.0, true)
+        );
 
-        List<Product> result = productController.getAllProducts();
+        when(productService.getAllProducts(null)).thenReturn(products);
 
-        assertEquals(1, result.size());
-        assertEquals(product.getName(), result.get(0).getName());
-        verify(productService, times(1)).getAllProducts();
+        List<Product> response = productController.getAllProducts(null);
+
+        assertNotNull(response);
+        assertEquals(2, response.size());
+        assertEquals("Product 1", response.get(0).getName());
+        assertEquals("Description 1", response.get(0).getDescription());
+        assertEquals(true, response.get(0).getInStock());
+        assertEquals(100.0, response.get(0).getPrice());
+        assertEquals("Product 2", response.get(1).getName());
+        assertEquals("Description 2", response.get(1).getDescription());
+        assertEquals(true, response.get(1).getInStock());
+        assertEquals(200.0, response.get(1).getPrice());
+        verify(productService, times(1)).getAllProducts(null);
+    }
+
+    @Test
+    void testGetAllProducts_WithFilter() {
+        ProductFilterDto filterDto = new ProductFilterDto(null, 750.0, 1500.0,
+            null, null, null, null);
+
+        List<Product> products = List.of(
+            new Product(1L, "Laptop", "Description 1", 1500.0, true),
+            new Product(2L, "Smartphone", "Description 2", 800.0, true)
+        );
+
+        when(productService.getAllProducts(filterDto)).thenReturn(products);
+
+        List<Product> response = productController.getAllProducts(filterDto);
+
+        assertNotNull(response);
+        assertEquals(2, response.size());
+        assertEquals("Laptop", response.get(0).getName());
+        assertEquals("Description 1", response.get(0).getDescription());
+        assertEquals(true, response.get(0).getInStock());
+        assertEquals(1500.0, response.get(0).getPrice());
+        assertEquals("Smartphone", response.get(1).getName());
+        assertEquals("Description 2", response.get(1).getDescription());
+        assertEquals(true, response.get(1).getInStock());
+        assertEquals(800.0, response.get(1).getPrice());
+        verify(productService, times(1)).getAllProducts(filterDto);
+    }
+
+    @Test
+    void testGetAllProducts_EmptyResult() {
+        when(productService.getAllProducts(null)).thenReturn(new ArrayList<>());
+
+        List<Product> response = productController.getAllProducts(null);
+
+        assertNotNull(response);
+        assertTrue(response.isEmpty());
+        verify(productService, times(1)).getAllProducts(null);
     }
 
     @Test

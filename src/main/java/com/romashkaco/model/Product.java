@@ -50,7 +50,7 @@ public class Product {
      */
     @Min(value = 0, message = "Цена товара не может быть меньше 0")
     @Column(name = "price", nullable = false)
-    private double price = 0.0;
+    private Double price = 0.0;
 
     /**
      * В наличии ли товар.

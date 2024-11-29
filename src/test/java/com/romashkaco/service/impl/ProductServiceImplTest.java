@@ -26,16 +26,27 @@ class ProductServiceImplTest {
     private ProductServiceImpl productService;
 
     @Test
-    void testGetAllProducts() {
+    void testGetAllProducts_NoFilter() {
         List<Product> products = Arrays.asList(
             new Product(1L, "Product 1", "Description 1", 10.0, true),
             new Product(2L, "Product 2", "Description 2", 20.0, false)
         );
         when(productRepository.findAll()).thenReturn(products);
 
-        List<Product> result = productService.getAllProducts();
+        List<Product> result = productService.getAllProducts(null);
 
         assertEquals(2, result.size());
+        verify(productRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testGetAllProducts_EmptyResult() {
+        when(productRepository.findAll()).thenReturn(List.of());
+
+        List<Product> result = productService.getAllProducts(null);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
         verify(productRepository, times(1)).findAll();
     }
 

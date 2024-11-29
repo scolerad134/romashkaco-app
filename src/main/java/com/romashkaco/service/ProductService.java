@@ -1,5 +1,6 @@
 package com.romashkaco.service;
 
+import com.romashkaco.dto.ProductFilterDto;
 import com.romashkaco.model.Product;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface ProductService {
      *
      * @return список товаров.
      */
-    List<Product> getAllProducts();
+    List<Product> getAllProducts(ProductFilterDto filterDto);
 
     /**
      * Получает отдельный товар.

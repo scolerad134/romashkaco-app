@@ -1,5 +1,6 @@
 package com.romashkaco.controller;
 
+import com.romashkaco.dto.ProductFilterDto;
 import com.romashkaco.model.Product;
 import com.romashkaco.service.ProductService;
 import jakarta.validation.Valid;
@@ -36,8 +37,11 @@ public class ProductController {
      * @return список товаров.
      */
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public List<Product> getAllProducts(@RequestBody(required = false) ProductFilterDto filterDto) {
+        log.debug("GET-request, getAllProducts - start, filterDto = {}", filterDto);
+        List<Product> products = productService.getAllProducts(filterDto);
+        log.debug("GET-request, getAllProducts - end");
+        return products;
     }
 
     /**
